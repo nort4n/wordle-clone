@@ -21,8 +21,6 @@ body {
     border-bottom: 2px solid black;
     text-align: center;
 }
-.brand {
-}
 .game {
     display: flex;
     flex-direction: column;
@@ -35,4 +33,7 @@ body {
     height: 3rem;
     width: 3rem;
     margin: 0.3rem;
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
 }
