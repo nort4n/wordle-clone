@@ -37,3 +37,16 @@ body {
     font-size: 2rem;
     text-align: center;
 }
+.yellow {
+    background-color: goldenrod;
+    color: white;
+}
+
+.green {
+    background-color: yellowgreen;
+    color: white;
+}
+.gray {
+    background-color: grey;
+    color: white;
+}

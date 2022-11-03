@@ -1,9 +1,17 @@
 const userInput = [];
 let numberOfTries = 0;
-let todaysWord;
+let todaysWord = "ooaar";
+let todaysWordArray = [];
+let guessedWordBoolean = true;
 let gameBoard = document.querySelector(".game");
 let rows = gameBoard.children;
 let letterBoxes = rows[numberOfTries].children;
+
+// ------------TO DO------------------------
+// capitalize displayed letters
+// winning animation
+// shaking row?
+// spinner when waiting for validation (hitting enter)
 
 // ------------non-api-validation----------
 // compare valid guess word with daily word
@@ -17,9 +25,8 @@ let letterBoxes = rows[numberOfTries].children;
 // shake row for invalid guess
 
 async function init() {
-    getTodaysWord();
+    //getTodaysWord();
     eventListener();
-    // await validateWord("past")
 }
 function eventListener() {
     document
@@ -38,16 +45,16 @@ function strokeHandler(key) {
         : key === "Backspace"
         ? deleteLetter()
         : key === "Enter"
-        ? console.log("enter", key)
+        ? verifyGuessedWord(userInput.join(""))
         : console.log("invalid key", key);
 }
-init();
+
 // display valid input on square
 function displayLetter(letter) {
+    console.log(rows.length);
     if (userInput.length < 5) {
-        letterBoxes[userInput.length].innerText = letter;
+        letterBoxes[userInput.length].innerText = letter.toUpperCase();
         userInput.push(letter);
-        console.log(userInput);
     }
 }
 // backspace deletes last entry
@@ -55,13 +62,48 @@ function deleteLetter() {
     if (userInput.length > 0) {
         letterBoxes[userInput.length - 1].innerText = " ";
         userInput.pop();
-        console.log(userInput);
     }
 }
 // upon hitting return, verification function is called, testing word length and then validating word
-function verifyGuessedWord(word) {
-    if (userInput.length === 5) {
-        validateWord(word);
+async function verifyGuessedWord(word) {
+    //console.log(await validateWord(word));
+    console.log(guessedWordBoolean);
+    console.log(todaysWord);
+
+    if (word.length === 5 && guessedWordBoolean) {
+        for (i = 0; i < letterBoxes.length; i++) {
+            letterBoxes[i].setAttribute("class", "square gray");
+        }
+        for (i = 0; i < word.length; i++) {
+            let flag = false;
+            for (j = 0; j < todaysWord.length; j++) {
+                if (word[i] === todaysWord[j]) {
+                    // perfect match
+                    if (i === j) {
+                        letterBoxes[i].setAttribute("class", "square green");
+                        flag = true;
+                    } else {
+                        // base case: no perfect match yet
+                        !flag &&
+                            letterBoxes[i].setAttribute(
+                                "class",
+                                "square yellow"
+                            );
+                        // no match if the first instance of the letter in the guessword and the last instance of the letter in todaysword is already passed
+                        if (
+                            word.indexOf(word[i]) < i &&
+                            todaysWord.lastIndexOf(word[i]) < i
+                        ) {
+                            letterBoxes[i].setAttribute("class", "square gray");
+                        }
+                    }
+                }
+            }
+        }
+        numberOfTries++;
+        letterBoxes = rows[numberOfTries].children;
+
+        userInput.length = 0;
     }
 }
 
@@ -86,8 +128,9 @@ async function validateWord(word) {
             }
         );
         const processedResponse = await response.json();
-        return processedResponse.validWord;
+        guessedWordBoolean = processedResponse.validWord;
     } catch (error) {
         console.error(error);
     }
 }
+init();
