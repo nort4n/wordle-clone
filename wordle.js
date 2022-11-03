@@ -1,11 +1,13 @@
 const userInput = [];
-let numberOfTries = 0;
+const ANSWER_LENGTH = 5;
+
+let currentRow = 0;
 let todaysWord = "ooaar";
 let todaysWordArray = [];
 let guessedWordBoolean = true;
 let gameBoard = document.querySelector(".game");
 let rows = gameBoard.children;
-let letterBoxes = rows[numberOfTries].children;
+let letterBoxes = rows[currentRow].children;
 
 // ------------TO DO------------------------
 // capitalize displayed letters
@@ -66,45 +68,7 @@ function deleteLetter() {
 }
 // upon hitting return, verification function is called, testing word length and then validating word
 async function verifyGuessedWord(word) {
-    //console.log(await validateWord(word));
-    console.log(guessedWordBoolean);
-    console.log(todaysWord);
-
-    if (word.length === 5 && guessedWordBoolean) {
-        for (i = 0; i < letterBoxes.length; i++) {
-            letterBoxes[i].setAttribute("class", "square gray");
-        }
-        for (i = 0; i < word.length; i++) {
-            let flag = false;
-            for (j = 0; j < todaysWord.length; j++) {
-                if (word[i] === todaysWord[j]) {
-                    // perfect match
-                    if (i === j) {
-                        letterBoxes[i].setAttribute("class", "square green");
-                        flag = true;
-                    } else {
-                        // base case: no perfect match yet
-                        !flag &&
-                            letterBoxes[i].setAttribute(
-                                "class",
-                                "square yellow"
-                            );
-                        // no match if the first instance of the letter in the guessword and the last instance of the letter in todaysword is already passed
-                        if (
-                            word.indexOf(word[i]) < i &&
-                            todaysWord.lastIndexOf(word[i]) < i
-                        ) {
-                            letterBoxes[i].setAttribute("class", "square gray");
-                        }
-                    }
-                }
-            }
-        }
-        numberOfTries++;
-        letterBoxes = rows[numberOfTries].children;
-
-        userInput.length = 0;
-    }
+    setLoading(isLoading);
 }
 
 // ------------api--------------
@@ -133,4 +97,22 @@ async function validateWord(word) {
         console.error(error);
     }
 }
+
+function makeMap(array) {
+    const obj = {};
+    for (i = 0; i < array.length; i++) {
+        if (obj[array[i]]) {
+            obj[array[i]++];
+        } else {
+            obj[(array[i] = 1)];
+        }
+    }
+    return obj;
+}
+
+// loading function for later use
+function setLoading(isLoading) {
+    return;
+}
+
 init();
