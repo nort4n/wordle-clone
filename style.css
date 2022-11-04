@@ -17,9 +17,14 @@ body {
     flex-direction: column;
     justify-content: center;
     height: 6rem;
-    margin-bottom: 4rem;
+
     border-bottom: 2px solid black;
     text-align: center;
+}
+.info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .game {
     display: flex;
@@ -49,4 +54,97 @@ body {
 .gray {
     background-color: grey;
     color: white;
+}
+.invalid {
+    animation: flash 1s, shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes flash {
+    5% {
+        border-color: crimson;
+        /* border: 5px; */
+    }
+    100% {
+        border-color: lightgray;
+        /* border: 3px; */
+    }
+}
+.spiral {
+    font-size: 40px;
+    animation: spin 1.5s linear infinite;
+}
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hidden {
+    visibility: hidden;
+}
+.shake {
+    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes rainbow {
+    100%,
+    0% {
+        color: rgb(255, 0, 0);
+    }
+    8% {
+        color: rgb(255, 127, 0);
+    }
+    16% {
+        color: rgb(255, 255, 0);
+    }
+    25% {
+        color: rgb(127, 255, 0);
+    }
+    33% {
+        color: rgb(0, 255, 0);
+    }
+    41% {
+        color: rgb(0, 255, 127);
+    }
+    50% {
+        color: rgb(0, 255, 255);
+    }
+    58% {
+        color: rgb(0, 127, 255);
+    }
+    66% {
+        color: rgb(0, 0, 255);
+    }
+    75% {
+        color: rgb(127, 0, 255);
+    }
+    83% {
+        color: rgb(255, 0, 255);
+    }
+    91% {
+        color: rgb(255, 0, 127);
+    }
+}
+.winner {
+    animation: rainbow 4s infinite linear;
+}
+@keyframes shake {
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
 }

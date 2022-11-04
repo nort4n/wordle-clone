@@ -1,33 +1,23 @@
-const userInput = [];
 const ANSWER_LENGTH = 5;
-
+const ROUNDS = 6;
 let currentRow = 0;
-let todaysWord = "ooaar";
-let todaysWordArray = [];
-let guessedWordBoolean = true;
-let gameBoard = document.querySelector(".game");
-let rows = gameBoard.children;
+let todaysWord;
+
+let validWord = false;
+let isLoading = true;
+let done = false;
+const userInput = [];
+const gameBoard = document.querySelector(".game");
+const rows = gameBoard.children;
 let letterBoxes = rows[currentRow].children;
-
-// ------------TO DO------------------------
-// capitalize displayed letters
-// winning animation
-// shaking row?
-// spinner when waiting for validation (hitting enter)
-
-// ------------non-api-validation----------
-// compare valid guess word with daily word
-// check for each letter of the guessed words if it is in the daily word
-// if no: gray background
-// check then if it has the same index
-// if yes green background
-// if no yellow background
-
-// --------------design----------------
-// shake row for invalid guess
+const loadingDiv = document.querySelector(".info-bar");
 
 async function init() {
-    //getTodaysWord();
+    setLoading(isLoading);
+    todaysWord = await getTodaysWord();
+
+    isLoading = false;
+    setLoading(isLoading);
     eventListener();
 }
 function eventListener() {
@@ -41,22 +31,24 @@ function isLetter(letter) {
     return /^[a-zA-Z]$/.test(letter);
 }
 function strokeHandler(key) {
+    if (done || isLoading) {
+        return;
+    }
     // add exceptions for backspace and enter
     isLetter(key)
         ? displayLetter(key)
         : key === "Backspace"
         ? deleteLetter()
         : key === "Enter"
-        ? verifyGuessedWord(userInput.join(""))
+        ? verifyGuessedWord(userInput)
         : console.log("invalid key", key);
 }
 
 // display valid input on square
 function displayLetter(letter) {
-    console.log(rows.length);
     if (userInput.length < 5) {
         letterBoxes[userInput.length].innerText = letter.toUpperCase();
-        userInput.push(letter);
+        userInput.push(letter.toUpperCase());
     }
 }
 // backspace deletes last entry
@@ -67,18 +59,67 @@ function deleteLetter() {
     }
 }
 // upon hitting return, verification function is called, testing word length and then validating word
-async function verifyGuessedWord(word) {
+async function verifyGuessedWord(userInput) {
+    const word = userInput.join("");
+    if (word.length !== ANSWER_LENGTH) {
+        // incomplete attempt
+        return;
+    }
+    const wordArray = todaysWord.split("");
+    isLoading = true;
     setLoading(isLoading);
-}
+    await validateWord(word);
+    isLoading = false;
+    setLoading(isLoading);
 
+    if (!validWord) {
+        markInvalidWord();
+        return;
+    }
+    const map = makeMap(wordArray);
+
+    // verifying try in several steps
+    // first pass, checking for perfect matches
+
+    for (i = 0; i < ANSWER_LENGTH; i++) {
+        if (userInput[i] === wordArray[i]) {
+            letterBoxes[i].classList.add("green");
+
+            map[userInput[i]]--;
+        }
+    }
+    // second loop for non-perfect matches and misses
+    for (i = 0; i < ANSWER_LENGTH; i++) {
+        if (userInput[i] === wordArray[i]) {
+            // do nothing
+        } else if (map[userInput[i]] && map[userInput[i]] > 0) {
+            letterBoxes[i].classList.add("yellow");
+            map[userInput[i]]--;
+        } else {
+            letterBoxes[i].classList.add("gray");
+        }
+    }
+    currentRow++;
+    userInput.length = 0;
+    if (word === todaysWord) {
+        document.querySelector(".brand").classList.add("winner");
+        alert("You Win!");
+        done = true;
+    } else if (currentRow === ROUNDS) {
+        alert(`You lose. The word was ${todaysWord}`);
+        done = true;
+        return;
+    }
+    letterBoxes = rows[currentRow].children;
+}
 // ------------api--------------
 // get daily word
 async function getTodaysWord() {
     const promise = await fetch("https://words.dev-apis.com/word-of-the-day");
     const processedResponse = await promise.json();
-    todaysWord = processedResponse.word;
+    const word = processedResponse.word.toUpperCase();
+    return word;
 }
-
 // post guessed word to validate against the dictionary
 async function validateWord(word) {
     const objectifiedWord = { word: word };
@@ -92,7 +133,7 @@ async function validateWord(word) {
             }
         );
         const processedResponse = await response.json();
-        guessedWordBoolean = processedResponse.validWord;
+        validWord = processedResponse.validWord;
     } catch (error) {
         console.error(error);
     }
@@ -104,7 +145,7 @@ function makeMap(array) {
         if (obj[array[i]]) {
             obj[array[i]++];
         } else {
-            obj[(array[i] = 1)];
+            obj[array[i]] = 1;
         }
     }
     return obj;
@@ -112,7 +153,16 @@ function makeMap(array) {
 
 // loading function for later use
 function setLoading(isLoading) {
+    loadingDiv.classList.toggle("hidden", !isLoading);
     return;
+}
+
+// UI response to invalid attempt
+function markInvalidWord() {
+    for (let i = 0; i < ANSWER_LENGTH; i++) {
+        letterBoxes[i].classList.remove("invalid");
+        setTimeout(() => letterBoxes[i].classList.add("invalid"), 10);
+    }
 }
 
 init();
