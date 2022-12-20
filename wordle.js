@@ -8,8 +8,8 @@ let isLoading = true;
 let done = false;
 const userInput = [];
 const gameBoard = document.querySelector(".game");
-const keyBoard = document.querySelector(".keyboard");
-const keys = keyBoard.querySelectorAll(":scope > * > *");
+// const keyBoard = document.querySelector(".keyboard");
+// const keys = keyBoard.querySelectorAll(":scope > * > *");
 
 const rows = gameBoard.children;
 let letterBoxes = rows[currentRow].children;
@@ -88,8 +88,8 @@ async function verifyGuessedWord(userInput) {
         if (userInput[i] === wordArray[i]) {
             letterBoxes[i].classList.add("green");
 
-            document.querySelector(`#${userInput[i]}`).classList.add("green");
-            console.log(userInput[i]);
+            document.querySelector(`#${userInput[i]}`).style.backgroundColor =
+                "yellowgreen";
             map[userInput[i]]--;
         }
     }
@@ -100,10 +100,20 @@ async function verifyGuessedWord(userInput) {
         } else if (map[userInput[i]] && map[userInput[i]] > 0) {
             letterBoxes[i].classList.add("yellow");
             map[userInput[i]]--;
-            document.querySelector(`#${userInput[i]}`).classList.add("yellow");
-            console.log(document.querySelector(`#${userInput[i]}`));
+            if (
+                document.querySelector(`#${userInput[i]}`).style
+                    .backgroundColor != "yellowgreen" ||
+                document.querySelector(`#${userInput[i]}`).style
+                    .backgroundColor != "gray"
+            ) {
+                document.querySelector(
+                    `#${userInput[i]}`
+                ).style.backgroundColor = "goldenrod";
+            }
         } else {
             letterBoxes[i].classList.add("gray");
+            document.querySelector(`#${userInput[i]}`).style.backgroundColor =
+                "gray";
         }
     }
     currentRow++;
