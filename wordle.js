@@ -102,7 +102,7 @@ async function verifyGuessedWord(userInput) {
             map[userInput[i]]--;
             if (
                 document.querySelector(`#${userInput[i]}`).style
-                    .backgroundColor != "yellowgreen" ||
+                    .backgroundColor != "yellowgreen" &&
                 document.querySelector(`#${userInput[i]}`).style
                     .backgroundColor != "gray"
             ) {
