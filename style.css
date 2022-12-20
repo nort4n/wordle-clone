@@ -26,6 +26,7 @@ body {
     align-items: center;
     justify-content: center;
 }
+/* GAME */
 .game {
     display: flex;
     flex-direction: column;
@@ -58,6 +59,27 @@ body {
 .invalid {
     animation: flash 1s, shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
+/* KEYBOARD */
+.keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.key-row {
+    display: flex;
+    flex-direction: row;
+}
+.key {
+    background-color: lightgray;
+    color: white;
+    border-radius: 5px;
+    border: 3px solid white;
+    height: 2rem;
+    width: 2rem;
+    padding: 2px;
+    text-align: center;
+}
+
 @keyframes flash {
     5% {
         border-color: crimson;

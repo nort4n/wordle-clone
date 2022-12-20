@@ -8,6 +8,9 @@ let isLoading = true;
 let done = false;
 const userInput = [];
 const gameBoard = document.querySelector(".game");
+const keyBoard = document.querySelector(".keyboard");
+const keys = keyBoard.querySelectorAll(":scope > * > *");
+
 const rows = gameBoard.children;
 let letterBoxes = rows[currentRow].children;
 const loadingDiv = document.querySelector(".info-bar");
@@ -85,6 +88,8 @@ async function verifyGuessedWord(userInput) {
         if (userInput[i] === wordArray[i]) {
             letterBoxes[i].classList.add("green");
 
+            document.querySelector(`#${userInput[i]}`).classList.add("green");
+            console.log(userInput[i]);
             map[userInput[i]]--;
         }
     }
@@ -95,6 +100,8 @@ async function verifyGuessedWord(userInput) {
         } else if (map[userInput[i]] && map[userInput[i]] > 0) {
             letterBoxes[i].classList.add("yellow");
             map[userInput[i]]--;
+            document.querySelector(`#${userInput[i]}`).classList.add("yellow");
+            console.log(document.querySelector(`#${userInput[i]}`));
         } else {
             letterBoxes[i].classList.add("gray");
         }
