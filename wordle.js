@@ -116,7 +116,12 @@ async function verifyGuessedWord(userInput) {
                     `#${userInput[i]}`
                 ).style.backgroundColor = "goldenrod";
             }
-        } else {
+        } else if (
+            document.querySelector(`#${userInput[i]}`).style.backgroundColor !=
+                "yellowgreen" &&
+            document.querySelector(`#${userInput[i]}`).style.backgroundColor !=
+                "goldenrod"
+        ) {
             letterBoxes[i].classList.add("gray");
             document.querySelector(`#${userInput[i]}`).style.backgroundColor =
                 "gray";
@@ -183,7 +188,7 @@ function makeMap(array) {
     const obj = {};
     for (i = 0; i < array.length; i++) {
         if (obj[array[i]]) {
-            obj[array[i]++];
+            obj[array[i]]++;
         } else {
             obj[array[i]] = 1;
         }
