@@ -1,4 +1,4 @@
-const ANSWER_LENGTH = 5;
+const ANSWER_LENGTH = 6;
 const ROUNDS = 6;
 let currentRow = 0;
 let todaysWord;
@@ -31,7 +31,7 @@ function eventListener() {
 // -------------controls-------------
 // testing if an input is not any symbols or signs, just single letters
 function isLetter(letter) {
-    return /^[a-zA-Z]$/.test(letter);
+    return /^[a-zA-ZäöüÄÖÜß]$/.test(letter);
 }
 function strokeHandler(key) {
     if (done || isLoading) {
@@ -49,8 +49,12 @@ function strokeHandler(key) {
 
 // display valid input on square
 function displayLetter(letter) {
-    if (userInput.length < 5) {
+    if (userInput.length < 5 && letter != "ß") {
         letterBoxes[userInput.length].innerText = letter.toUpperCase();
+        userInput.push(letter.toUpperCase());
+    }
+    if (userInput.length < 5 && letter === "ß") {
+        letterBoxes[userInput.length].innerText = letter;
         userInput.push(letter.toUpperCase());
     }
 }
