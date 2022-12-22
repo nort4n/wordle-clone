@@ -17,7 +17,9 @@ const loadingDiv = document.querySelector(".info-bar");
 
 async function init() {
     setLoading(isLoading);
-    todaysWord = await getTodaysWord();
+    const words = await getWordsFromJson();
+    todaysWord = getRandomWord(words);
+    console.log(todaysWord);
 
     isLoading = false;
     setLoading(isLoading);
@@ -141,6 +143,23 @@ async function getTodaysWord() {
     const word = processedResponse.word.toUpperCase();
     return word;
 }
+
+// get words from the dictionary
+async function getWordsFromJson() {
+    try {
+        const res = await fetch("dictRev.json");
+        const data = await res.json();
+        return data.words;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function getRandomWord(words) {
+    const randomWord = words[Math.floor(Math.random() * words.length)];
+    return randomWord;
+}
+
 // post guessed word to validate against the dictionary
 async function validateWord(word) {
     const objectifiedWord = { word: word };
