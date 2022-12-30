@@ -138,7 +138,9 @@ async function verifyGuessedWord(userInput) {
 // ------------api--------------
 // get daily word
 async function getTodaysWord() {
-    const promise = await fetch("https://words.dev-apis.com/word-of-the-day");
+    const promise = await fetch(
+        "https://words.dev-apis.com/word-of-the-day?random=1"
+    );
     const processedResponse = await promise.json();
     const word = processedResponse.word.toUpperCase();
     return word;
